@@ -6,6 +6,30 @@
     <title>TEA · EARL GREY · HOT</title>
 </head>
 <body>
-    <h1>COME</h1>
+    <h1>🫖 Welcome to the Earl Grey tea timer 🫖</h1>
 </body>
+
+<script>
+
+let countdown;
+const fiveMinutes = 300000;
+
+function teaTimer() {
+    const start = Date.now();
+    const end = start + fiveMinutes;
+    
+    countdown = setInterval(() => {
+        const secondsLeft = Math.round((end - Date.now()) / 1000);
+
+        if (secondsLeft === 0) {
+            clearInterval(countdown);
+            return;
+        }
+        console.log(secondsLeft);
+    }, 1000);
+}
+
+console.log(teaTimer());
+
+</script>
 </html>
