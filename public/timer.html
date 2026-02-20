@@ -7,16 +7,20 @@
 </head>
 <body>
     <h1>🫖 Welcome to the Earl Grey tea timer 🫖</h1>
+    <div>
+        <h1 class="display-time-left"></h1>
+    </div>
 </body>
 
 <script>
 
 let countdown;
-const fiveMinutes = 300000;
+const sixMinutes = 360000;
+const timerDisplay = document.querySelector('.display-time-left');
 
 function teaTimer() {
     const start = Date.now();
-    const end = start + fiveMinutes;
+    const end = start + sixMinutes;
     
     countdown = setInterval(() => {
         const secondsLeft = Math.round((end - Date.now()) / 1000);
@@ -25,11 +29,20 @@ function teaTimer() {
             clearInterval(countdown);
             return;
         }
-        console.log(secondsLeft);
+        displayTimeLeft(secondsLeft);
     }, 1000);
 }
 
-console.log(teaTimer());
+function displayTimeLeft(secondsLeft) {
+    const minutesLeft = Math.floor(secondsLeft / 60);
+    const remainderSeconds = secondsLeft % 60;
+    const display = `${minutesLeft}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+    timerDisplay.textContent = display;
+    document.title = display;
+}
+
+teaTimer();
+
 
 </script>
 </html>
