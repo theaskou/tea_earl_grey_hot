@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TEA · EARL GREY · HOT</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪐</text></svg>">
 </head>
 <body>
     <h1>🫖 Welcome to the Earl Grey tea timer 🫖</h1>
@@ -14,9 +15,8 @@
 </body>
 
 <script>
-
 let countdown;
-const sixMinutes = 360000;
+const sixMinutesInMilliseconds = 360000;
 const timerDisplay = document.querySelector('.display-time-left');
 const startTimerButton = document.querySelector(".start-timer-button");
 
@@ -25,7 +25,8 @@ startTimerButton.addEventListener("click", teaTimer);
 function teaTimer() {
     clearInterval(countdown);
     const start = Date.now();
-    const end = start + sixMinutes;
+    const end = start + sixMinutesInMilliseconds;
+    displayTimeLeft(sixMinutesInMilliseconds / 1000);
     
     countdown = setInterval(() => {
         const secondsLeft = Math.round((end - Date.now()) / 1000);
