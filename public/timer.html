@@ -19,10 +19,10 @@ let countdown;
 let isRunning = false;
 const sixMinutesInMilliseconds = 3600;
 const timerDisplay = document.querySelector('.display-time-left');
-const startTimerButton = document.querySelector(".start-timer-button");
-const finishSound = new Audio("/public/replicator.mp3");
+const startTimerButton = document.querySelector('.start-timer-button');
+const finishSound = new Audio('/public/replicator.mp3');
 
-startTimerButton.addEventListener("click", teaTimer);
+startTimerButton.addEventListener('click', teaTimer);
 
 function teaTimer() {
     clearInterval(countdown);
