@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TEA · EARL GREY · HOT</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪐</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪐</text></svg>">
 </head>
+
 <body>
-    <h1>🫖 Welcome to the Earl Grey tea timer 🫖</h1>
+    <h1>Earl Grey tea timer 🫖</h1>
     <div>
         <h1 class="display-time-left">06:00</h1>
         <button class="start-timer-button">Start</button>
@@ -15,41 +18,50 @@
 </body>
 
 <script>
-let countdown;
-let isRunning = false;
-const sixMinutesInMilliseconds = 3600;
-const timerDisplay = document.querySelector('.display-time-left');
-const startTimerButton = document.querySelector('.start-timer-button');
-const finishSound = new Audio('/public/replicator.mp3');
+    let countdown;
+    let isRunning = false;
+    const sixMinutesInMilliseconds = 3600;
+    const timerDisplay = document.querySelector('.display-time-left');
+    const timerButton = document.querySelector('.start-timer-button');
+    const finishSound = new Audio('/public/replicator.mp3');
 
-startTimerButton.addEventListener('click', teaTimer);
+    timerButton.addEventListener('click', teaTimer);
 
-function teaTimer() {
-    clearInterval(countdown);
-    const start = Date.now();
-    const end = start + sixMinutesInMilliseconds;
-    displayTimeLeft(sixMinutesInMilliseconds / 1000);
-    
-    countdown = setInterval(() => {
-        const secondsLeft = Math.round((end - Date.now()) / 1000);
+    function teaTimer() {
+        if (!isRunning) {
+            isRunning = true;
+            timerButton.textContent="Stop";
+            const start = Date.now();
+            const end = start + sixMinutesInMilliseconds;
+            displayTimeLeft(sixMinutesInMilliseconds / 1000);
 
-        if (secondsLeft < 0) {
-            finishSound.play();
+            countdown = setInterval(() => {
+                const secondsLeft = Math.round((end - Date.now()) / 1000);
+
+                if (secondsLeft < 0) {
+                    finishSound.play();
+                    clearInterval(countdown);
+                    return;
+                }
+                displayTimeLeft(secondsLeft);
+            }, 1000);
+
+        } else {
+            isRunning = false;
             clearInterval(countdown);
+            timerButton.textContent="Start";
+            timerDisplay.textContent="06:00";
             return;
         }
-        displayTimeLeft(secondsLeft);
-    }, 1000);
-}
+    }
 
-function displayTimeLeft(secondsLeft) {
-    const minutesLeft = Math.floor(secondsLeft / 60);
-    const remainderSeconds = secondsLeft % 60;
-    const display = `0${minutesLeft}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
-    timerDisplay.textContent = display;
-    document.title = display;
-}
-
+    function displayTimeLeft(secondsLeft) {
+        const minutesLeft = Math.floor(secondsLeft / 60);
+        const remainderSeconds = secondsLeft % 60;
+        const display = `0${minutesLeft}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+        timerDisplay.textContent = display;
+        document.title = display;
+    }
 
 </script>
 </html>
