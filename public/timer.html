@@ -92,15 +92,18 @@
     const timerDisplay = document.querySelector('.display-time-left');
     const timerButton = document.querySelector('.timer-button');
     const finishSound = new Audio('/public/assets/sounds/replicator.mp3');
+    const buttonSound = new Audio('public/assets/sounds/button_sound.mp3');
     const imageDisplay = document.querySelector('.display-image');
 
     timerButton.addEventListener('click', () => {
-        isRunning ? stopTimer() : startTimer()
+        buttonSound.play();
+        isRunning ? stopTimer() : startTimer();
     });
 
-    function displayTimeLeft(secondsLeft) {
+    function displayTimeLeft(millisecondsLeft) {
+        const secondsLeft = millisecondsLeft / 1000;
         const minutesLeft = Math.floor(secondsLeft / 60);
-        const remainderSeconds = secondsLeft % 60;
+        const remainderSeconds = Math.floor(secondsLeft % 60);
         const display = `0${minutesLeft}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
         timerDisplay.textContent = display;
         document.title = isRunning ? display : "Tea Timer";
@@ -113,34 +116,27 @@
         const end = start + sixMinutesInMilliseconds;
 
         countdown = setInterval(() => {
-            const secondsLeft = Math.round((end - Date.now()) / 1000);
-            displayTimeLeft(Math.max(secondsLeft, 0));
+            const millisecondsLeft = Math.max(end - Date.now(), 0);
+            displayTimeLeft(millisecondsLeft);
 
-            if (secondsLeft <= 0) {
+            if (millisecondsLeft <= 1000) {
                 finishSound.play();
                 imageDisplay.innerHTML = '<img src="/public/assets/images/picard.webp" alt="Picard says your tea is ready." />';
                 timerButton.textContent = "Reset";
-                clearStates();
+                clearInterval(countdown);
             }
-            displayTimeLeft(secondsLeft);
         }, 1000);
-
     }
 
     function stopTimer() {
-        clearStates();
-        imageDisplay.innerHTML = '';
-        timerButton.textContent = "Engage";
-        displayTimeLeft(sixMinutesInMilliseconds / 1000);
-    }
-
-    function clearStates() {
         isRunning = false;
         clearInterval(countdown);
+        imageDisplay.innerHTML = '';
+        timerButton.textContent = "Engage";
+        displayTimeLeft(sixMinutesInMilliseconds);
     }
 
-    displayTimeLeft(sixMinutesInMilliseconds / 1000);
-
+    displayTimeLeft(sixMinutesInMilliseconds);
 </script>
 
 </html>
