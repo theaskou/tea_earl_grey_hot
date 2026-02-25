@@ -4,64 +4,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEA · EARL GREY · HOT</title>
+    <title>Tea timer</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪐</text></svg>">
+    <style>
+        @font-face {
+            font-family: 'title';
+            src: url('/public/assets/fonts/TNG_Title.ttf');
+        }
+
+        @font-face {
+            font-family: 'paragraph';
+            src: url('/public/assets/fonts/TNG_Credits.woff') format('woff2');
+        }
+
+        body {
+            margin: 0;
+        }
+
+        .background {
+            background-color: black;
+        }
+
+        .front-page-headline {
+            color: #2b53a7;
+            font-family: 'title';
+            font-size: min(10vh, 8vw);
+        }
+
+        .display-time-left {
+            color: #2b53a7;
+            font-family: 'paragraph';
+            font-size: 10vh;
+        }
+
+        .timer-button {
+            color: #2b53a7;
+            background-color: black;
+            font-family: 'paragraph';
+            font-size: 4vh;
+            border: 0ch;
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🚀</text></svg>") 16 0, auto;
+        }
+
+        .timer-button:hover {
+            color: #d6a444;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-content: flex-start;
+            align-items: center;
+            gap: 2em;
+            padding: 2em;
+            min-height: 100vh;
+        }
+
+        .container>* {
+            margin: 0;
+        }
+
+        .display-image img {
+            width: auto;
+            max-width: 100%;
+            height: 40vh;
+            margin-top: 1em;
+        }
+    </style>
 </head>
 
-<body>
-    <h1>Earl Grey tea timer 🫖</h1>
-    <div>
-        <h1 class="display-time-left">06:00</h1>
-        <button class="start-timer-button">Start</button>
+<body class="background">
+    <div class="container">
+        <h1 class="front-page-headline">TEA · EARL GREY · HOT</h1>
+        <h1 class="display-time-left">--:--</h1>
+        <button class="timer-button">Engage</button>
+        <div class="display-image">
+
+        </div>
     </div>
 </body>
 
 <script>
     let countdown;
     let isRunning = false;
-    const sixMinutesInMilliseconds = 3600;
+    const sixMinutesInMilliseconds = 360000;
     const timerDisplay = document.querySelector('.display-time-left');
-    const timerButton = document.querySelector('.start-timer-button');
-    const finishSound = new Audio('/public/replicator.mp3');
+    const timerButton = document.querySelector('.timer-button');
+    const finishSound = new Audio('/public/assets/sounds/replicator.mp3');
+    const imageDisplay = document.querySelector('.display-image');
 
-    timerButton.addEventListener('click', teaTimer);
-
-    function teaTimer() {
-        if (!isRunning) {
-            isRunning = true;
-            timerButton.textContent="Stop";
-            const start = Date.now();
-            const end = start + sixMinutesInMilliseconds;
-            displayTimeLeft(sixMinutesInMilliseconds / 1000);
-
-            countdown = setInterval(() => {
-                const secondsLeft = Math.round((end - Date.now()) / 1000);
-
-                if (secondsLeft < 0) {
-                    finishSound.play();
-                    clearInterval(countdown);
-                    return;
-                }
-                displayTimeLeft(secondsLeft);
-            }, 1000);
-
-        } else {
-            isRunning = false;
-            clearInterval(countdown);
-            timerButton.textContent="Start";
-            timerDisplay.textContent="06:00";
-            return;
-        }
-    }
+    timerButton.addEventListener('click', () => {
+        isRunning ? stopTimer() : startTimer()
+    });
 
     function displayTimeLeft(secondsLeft) {
         const minutesLeft = Math.floor(secondsLeft / 60);
         const remainderSeconds = secondsLeft % 60;
         const display = `0${minutesLeft}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
         timerDisplay.textContent = display;
-        document.title = display;
+        document.title = isRunning ? display : "Tea Timer";
     }
 
+    function startTimer() {
+        isRunning = true;
+        timerButton.textContent = "Stop";
+        const start = Date.now();
+        const end = start + sixMinutesInMilliseconds;
+
+        countdown = setInterval(() => {
+            const secondsLeft = Math.round((end - Date.now()) / 1000);
+            displayTimeLeft(Math.max(secondsLeft, 0));
+
+            if (secondsLeft <= 0) {
+                finishSound.play();
+                imageDisplay.innerHTML = '<img src="/public/assets/images/picard.webp" alt="Picard says your tea is ready." />';
+                timerButton.textContent = "Reset";
+                clearStates();
+            }
+            displayTimeLeft(secondsLeft);
+        }, 1000);
+
+    }
+
+    function stopTimer() {
+        clearStates();
+        imageDisplay.innerHTML = '';
+        timerButton.textContent = "Engage";
+        displayTimeLeft(sixMinutesInMilliseconds / 1000);
+    }
+
+    function clearStates() {
+        isRunning = false;
+        clearInterval(countdown);
+    }
+
+    displayTimeLeft(sixMinutesInMilliseconds / 1000);
+
 </script>
+
 </html>
