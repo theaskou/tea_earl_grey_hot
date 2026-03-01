@@ -102,7 +102,7 @@
     function displayTimeLeft(millisecondsLeft) {
         const secondsLeft = millisecondsLeft / 1000;
         const minutesLeft = Math.floor(secondsLeft / 60);
-        const remainderSeconds = Math.floor(secondsLeft % 60);
+        const remainderSeconds = Math.round(secondsLeft % 60);
         const display = `0${minutesLeft}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
         timerDisplay.textContent = display;
         document.title = isRunning ? display : "Tea Timer";
