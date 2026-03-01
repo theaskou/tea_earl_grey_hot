@@ -1,24 +1,13 @@
 {
     "version": 2,
-    "headers": [
+    "builds": [
         {
             "source": "/public/assets/(.*)",
-            "headers": [
-                {
-                    "key": "Access-Control-Allow-Origin",
-                    "value": "*"
-                }
-            ]
-        }
-    ],
-    "routes": [
-        {
-            "src": "/public/assets/(.*)",
-            "dest": "/public/assets/$1"
+            "destination": "/public/assets/$1"
         },
         {
-            "src": "/(.*)",
-            "dest": "app.js"
+            "source": "/(.*)",
+            "destination": "/app.js"
         }
     ]
 }
