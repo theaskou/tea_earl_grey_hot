@@ -80,7 +80,6 @@
         <h1 class="display-time-left">--:--</h1>
         <button class="timer-button">Engage</button>
         <div class="display-image">
-
         </div>
     </div>
 </body>
@@ -92,7 +91,7 @@
     const timerDisplay = document.querySelector('.display-time-left');
     const timerButton = document.querySelector('.timer-button');
     const finishSound = new Audio('/public/assets/sounds/replicator.mp3');
-    const buttonSound = new Audio('public/assets/sounds/button_sound.mp3');
+    const buttonSound = new Audio('/public/assets/sounds/button_sound.mp3');
     const imageDisplay = document.querySelector('.display-image');
 
     timerButton.addEventListener('click', () => {
